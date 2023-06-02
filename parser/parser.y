@@ -23,15 +23,15 @@ extern char * yytext;
 %token <sValue> STRING
 %token <iValue> INTEGER
 %token <fValue> FLOAT
-%token EQUALS NOT NOT_EQUALS LESS_THAN LESS_THAN_OR_EQUALS_TO GREATER_THAN GREATER_THAN_OR_EQUALS_TO
+%token EQUALS NOT NOT_EQUALS LESS_THAN LESS_THAN_OR_EQUALS_TO GREATER_THAN GREATER_THAN_OR_EQUALS_TO OR AND
 %token WHILE DO IF ELSE ASSIGN
 
 %type <sValue> if
 
-%type <sValue> assign
-%type <sValue> number literal literal_string literal_integer literal_float
+%type <sValue> id assign
+%type <sValue> literal_string literal_integer literal_float
 %type <sValue> stmts stmt
-%type <sValue> logicExps logicExp block
+%type <sValue> logicExps logicExp
 
 %start program
 
@@ -39,14 +39,6 @@ extern char * yytext;
 program : stmts                                                            {printf("%s\n", $1);
                                                                            free($1);}
         ;
-
-
-if : IF logicExps block                                                    {}
-   ;
-
-block :                                                                    {}
-      | '{' stmts '}'                                                      {}
-      ;
 
 stmts :                                                                    {$$ = strdup("");} 
       | stmt stmts                                                         {int n1 = strlen($1);
@@ -62,32 +54,34 @@ stmt : assign                                                              {}
      | if                                                                  {$$ = $1;}
      ;
 
-logicExps : logicExp                                                       {}
-          | logicExp logicExps                                             {}
+if : IF logicExps '{' stmts '}'                                            {printf("IF\n")}
+   ;
+
+logicExps : '('logicExps')'                                                {}
+          | logicExp                                                       {}
+          | logicExps OR logicExp                                          {printf("or\n");}
+          | logicExps AND logicExp                                         {printf("and\n");}
           ;
 
-logicExp : number                                                          {}
-         | NOT logicExp ';'                                                {}
-         | logicExp EQUALS logicExp ';'                                    {}
-         | logicExp NOT_EQUALS logicExp ';'                                {}
-         | logicExp GREATER_THAN logicExp ';'                              {}
-         | logicExp GREATER_THAN_OR_EQUALS_TO logicExp ';'                 {}
-         | logicExp LESS_THAN logicExp ';'                                 {}
-         | logicExp LESS_THAN_OR_EQUALS_TO logicExp ';'                    {}
+logicExp : NOT id                                                          {printf("!\n");}
+         | id EQUALS id                                                    {printf("=\n");}
+         | id NOT_EQUALS id                                                {printf("!=\n");}
+         | id GREATER_THAN id                                              {printf(">\n");}
+         | id GREATER_THAN_OR_EQUALS_TO id                                 {printf(">=\n");}
+         | id LESS_THAN id                                                 {printf("<\n");}
+         | id LESS_THAN_OR_EQUALS_TO id                                    {printf("<=\n");}
          ;
 
-number : INTEGER                                                           {}
-       | FLOAT                                                             {}
+
+assign : VAR ID ':' TYPE ASSIGN id ';'                                     {}
        ;
 
 
-assign : VAR ID ':' TYPE ASSIGN literal ';'                                {}
-       ;
+id : literal_string                                                        {printf("%s\n", $1);}
+   | literal_integer                                                       {printf("%i\n", $1);}
+   | literal_float                                                         {printf("%f\n", $1);}
+   ;
 
-literal : literal_string                                                   {}
-        | literal_integer                                                  {}
-        | literal_float                                                    {}
-        ;
 
 literal_string : STRING                                                    {}
                ;

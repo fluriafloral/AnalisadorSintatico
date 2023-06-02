@@ -51,11 +51,13 @@
      LESS_THAN_OR_EQUALS_TO = 268,
      GREATER_THAN = 269,
      GREATER_THAN_OR_EQUALS_TO = 270,
-     WHILE = 271,
-     DO = 272,
-     IF = 273,
-     ELSE = 274,
-     ASSIGN = 275
+     OR = 271,
+     AND = 272,
+     WHILE = 273,
+     DO = 274,
+     IF = 275,
+     ELSE = 276,
+     ASSIGN = 277
    };
 #endif
 
@@ -76,7 +78,7 @@ typedef union YYSTYPE
 
 
 /* Line 1685 of yacc.c  */
-#line 80 "parser.tab.h"
+#line 82 "parser.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

@@ -1,0 +1,15 @@
+//gerar arquivo c do analisador léxico 
+lex lexer.l
+ou
+flex lexer.l
+
+//gerar arquivo c do analisador sintático (-d: y.tab.h; -v: y.output;)
+yacc parser.y -d -v
+ou
+bison parser.y -d -v
+
+//compilar léxico e sintático
+gcc lex.yy.c parser.tab.c -o parser
+
+//executar os testes
+parser < ../testes/teste1.txt

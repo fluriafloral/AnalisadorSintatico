@@ -42,6 +42,8 @@
 "<="		        		            {return(LESS_THAN_OR_EQUALS_TO);}
 ">"		        		              {return(GREATER_THAN);}
 ">="		        		            {return(GREATER_THAN_OR_EQUALS_TO);}
+"or"		        		              {return(OR);}
+"and"		        		              {return(AND);}
 
 
 [-+]?[0-9]+        	            {yylval.iValue = atoi(yytext); 
@@ -50,11 +52,14 @@
 [0-9]+|[-+]?[0-9]+\.?[0-9]*     {yylval.fValue = atof(yytext);
                                 return FLOAT;}
 
-\"[a-zA-Z0-9]+\"                {yylval.sValue = strdup(yytext); 
+[\"][a-zA-Z0-9]+[\"]            {yylval.sValue = strdup(yytext); 
+                                return STRING;}
+[\'][a-zA-Z0-9]+[\']            {yylval.sValue = strdup(yytext); 
                                 return STRING;}
 
 [a-zA-Z][a-zA-Z0-9]*	          {yylval.sValue = strdup(yytext); 
                                 return ID;}
+
 .                               {yyerror("invalid character");}
 
 %%
