@@ -1,0 +1,664 @@
+Terminals unused in grammar
+
+   WHILE
+   DO
+   ELSE
+
+
+Grammar
+
+    0 $accept: program $end
+
+    1 program: stmts
+
+    2 if: IF logicExps block
+
+    3 block: /* empty */
+    4      | '{' stmts '}'
+
+    5 stmts: /* empty */
+    6      | stmt stmts
+
+    7 stmt: assign
+    8     | if
+
+    9 logicExps: logicExp
+   10          | logicExp logicExps
+
+   11 logicExp: number
+   12         | NOT logicExp ';'
+   13         | logicExp EQUALS logicExp ';'
+   14         | logicExp NOT_EQUALS logicExp ';'
+   15         | logicExp GREATER_THAN logicExp ';'
+   16         | logicExp GREATER_THAN_OR_EQUALS_TO logicExp ';'
+   17         | logicExp LESS_THAN logicExp ';'
+   18         | logicExp LESS_THAN_OR_EQUALS_TO logicExp ';'
+
+   19 number: INTEGER
+   20       | FLOAT
+
+   21 assign: VAR ID ':' TYPE ASSIGN literal ';'
+
+   22 literal: literal_string
+   23        | literal_integer
+   24        | literal_float
+
+   25 literal_string: STRING
+
+   26 literal_integer: INTEGER
+
+   27 literal_float: FLOAT
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+':' (58) 21
+';' (59) 12 13 14 15 16 17 18 21
+'{' (123) 4
+'}' (125) 4
+error (256)
+ID (258) 21
+TYPE (259) 21
+VAR (260) 21
+STRING (261) 25
+INTEGER (262) 19 26
+FLOAT (263) 20 27
+EQUALS (264) 13
+NOT (265) 12
+NOT_EQUALS (266) 14
+LESS_THAN (267) 17
+LESS_THAN_OR_EQUALS_TO (268) 18
+GREATER_THAN (269) 15
+GREATER_THAN_OR_EQUALS_TO (270) 16
+WHILE (271)
+DO (272)
+IF (273) 2
+ELSE (274)
+ASSIGN (275) 21
+
+
+Nonterminals, with rules where they appear
+
+$accept (25)
+    on left: 0
+program (26)
+    on left: 1, on right: 0
+if (27)
+    on left: 2, on right: 8
+block (28)
+    on left: 3 4, on right: 2
+stmts (29)
+    on left: 5 6, on right: 1 4 6
+stmt (30)
+    on left: 7 8, on right: 6
+logicExps (31)
+    on left: 9 10, on right: 2 10
+logicExp (32)
+    on left: 11 12 13 14 15 16 17 18, on right: 9 10 12 13 14 15 16
+    17 18
+number (33)
+    on left: 19 20, on right: 11
+assign (34)
+    on left: 21, on right: 7
+literal (35)
+    on left: 22 23 24, on right: 21
+literal_string (36)
+    on left: 25, on right: 22
+literal_integer (37)
+    on left: 26, on right: 23
+literal_float (38)
+    on left: 27, on right: 24
+
+
+state 0
+
+    0 $accept: . program $end
+
+    VAR  shift, and go to state 1
+    IF   shift, and go to state 2
+
+    $default  reduce using rule 5 (stmts)
+
+    program  go to state 3
+    if       go to state 4
+    stmts    go to state 5
+    stmt     go to state 6
+    assign   go to state 7
+
+
+state 1
+
+   21 assign: VAR . ID ':' TYPE ASSIGN literal ';'
+
+    ID  shift, and go to state 8
+
+
+state 2
+
+    2 if: IF . logicExps block
+
+    INTEGER  shift, and go to state 9
+    FLOAT    shift, and go to state 10
+    NOT      shift, and go to state 11
+
+    logicExps  go to state 12
+    logicExp   go to state 13
+    number     go to state 14
+
+
+state 3
+
+    0 $accept: program . $end
+
+    $end  shift, and go to state 15
+
+
+state 4
+
+    8 stmt: if .
+
+    $default  reduce using rule 8 (stmt)
+
+
+state 5
+
+    1 program: stmts .
+
+    $default  reduce using rule 1 (program)
+
+
+state 6
+
+    6 stmts: stmt . stmts
+
+    VAR  shift, and go to state 1
+    IF   shift, and go to state 2
+
+    $default  reduce using rule 5 (stmts)
+
+    if      go to state 4
+    stmts   go to state 16
+    stmt    go to state 6
+    assign  go to state 7
+
+
+state 7
+
+    7 stmt: assign .
+
+    $default  reduce using rule 7 (stmt)
+
+
+state 8
+
+   21 assign: VAR ID . ':' TYPE ASSIGN literal ';'
+
+    ':'  shift, and go to state 17
+
+
+state 9
+
+   19 number: INTEGER .
+
+    $default  reduce using rule 19 (number)
+
+
+state 10
+
+   20 number: FLOAT .
+
+    $default  reduce using rule 20 (number)
+
+
+state 11
+
+   12 logicExp: NOT . logicExp ';'
+
+    INTEGER  shift, and go to state 9
+    FLOAT    shift, and go to state 10
+    NOT      shift, and go to state 11
+
+    logicExp  go to state 18
+    number    go to state 14
+
+
+state 12
+
+    2 if: IF logicExps . block
+
+    '{'  shift, and go to state 19
+
+    $default  reduce using rule 3 (block)
+
+    block  go to state 20
+
+
+state 13
+
+    9 logicExps: logicExp .
+   10          | logicExp . logicExps
+   13 logicExp: logicExp . EQUALS logicExp ';'
+   14         | logicExp . NOT_EQUALS logicExp ';'
+   15         | logicExp . GREATER_THAN logicExp ';'
+   16         | logicExp . GREATER_THAN_OR_EQUALS_TO logicExp ';'
+   17         | logicExp . LESS_THAN logicExp ';'
+   18         | logicExp . LESS_THAN_OR_EQUALS_TO logicExp ';'
+
+    INTEGER                    shift, and go to state 9
+    FLOAT                      shift, and go to state 10
+    EQUALS                     shift, and go to state 21
+    NOT                        shift, and go to state 11
+    NOT_EQUALS                 shift, and go to state 22
+    LESS_THAN                  shift, and go to state 23
+    LESS_THAN_OR_EQUALS_TO     shift, and go to state 24
+    GREATER_THAN               shift, and go to state 25
+    GREATER_THAN_OR_EQUALS_TO  shift, and go to state 26
+
+    $default  reduce using rule 9 (logicExps)
+
+    logicExps  go to state 27
+    logicExp   go to state 13
+    number     go to state 14
+
+
+state 14
+
+   11 logicExp: number .
+
+    $default  reduce using rule 11 (logicExp)
+
+
+state 15
+
+    0 $accept: program $end .
+
+    $default  accept
+
+
+state 16
+
+    6 stmts: stmt stmts .
+
+    $default  reduce using rule 6 (stmts)
+
+
+state 17
+
+   21 assign: VAR ID ':' . TYPE ASSIGN literal ';'
+
+    TYPE  shift, and go to state 28
+
+
+state 18
+
+   12 logicExp: NOT logicExp . ';'
+   13         | logicExp . EQUALS logicExp ';'
+   14         | logicExp . NOT_EQUALS logicExp ';'
+   15         | logicExp . GREATER_THAN logicExp ';'
+   16         | logicExp . GREATER_THAN_OR_EQUALS_TO logicExp ';'
+   17         | logicExp . LESS_THAN logicExp ';'
+   18         | logicExp . LESS_THAN_OR_EQUALS_TO logicExp ';'
+
+    EQUALS                     shift, and go to state 21
+    NOT_EQUALS                 shift, and go to state 22
+    LESS_THAN                  shift, and go to state 23
+    LESS_THAN_OR_EQUALS_TO     shift, and go to state 24
+    GREATER_THAN               shift, and go to state 25
+    GREATER_THAN_OR_EQUALS_TO  shift, and go to state 26
+    ';'                        shift, and go to state 29
+
+
+state 19
+
+    4 block: '{' . stmts '}'
+
+    VAR  shift, and go to state 1
+    IF   shift, and go to state 2
+
+    $default  reduce using rule 5 (stmts)
+
+    if      go to state 4
+    stmts   go to state 30
+    stmt    go to state 6
+    assign  go to state 7
+
+
+state 20
+
+    2 if: IF logicExps block .
+
+    $default  reduce using rule 2 (if)
+
+
+state 21
+
+   13 logicExp: logicExp EQUALS . logicExp ';'
+
+    INTEGER  shift, and go to state 9
+    FLOAT    shift, and go to state 10
+    NOT      shift, and go to state 11
+
+    logicExp  go to state 31
+    number    go to state 14
+
+
+state 22
+
+   14 logicExp: logicExp NOT_EQUALS . logicExp ';'
+
+    INTEGER  shift, and go to state 9
+    FLOAT    shift, and go to state 10
+    NOT      shift, and go to state 11
+
+    logicExp  go to state 32
+    number    go to state 14
+
+
+state 23
+
+   17 logicExp: logicExp LESS_THAN . logicExp ';'
+
+    INTEGER  shift, and go to state 9
+    FLOAT    shift, and go to state 10
+    NOT      shift, and go to state 11
+
+    logicExp  go to state 33
+    number    go to state 14
+
+
+state 24
+
+   18 logicExp: logicExp LESS_THAN_OR_EQUALS_TO . logicExp ';'
+
+    INTEGER  shift, and go to state 9
+    FLOAT    shift, and go to state 10
+    NOT      shift, and go to state 11
+
+    logicExp  go to state 34
+    number    go to state 14
+
+
+state 25
+
+   15 logicExp: logicExp GREATER_THAN . logicExp ';'
+
+    INTEGER  shift, and go to state 9
+    FLOAT    shift, and go to state 10
+    NOT      shift, and go to state 11
+
+    logicExp  go to state 35
+    number    go to state 14
+
+
+state 26
+
+   16 logicExp: logicExp GREATER_THAN_OR_EQUALS_TO . logicExp ';'
+
+    INTEGER  shift, and go to state 9
+    FLOAT    shift, and go to state 10
+    NOT      shift, and go to state 11
+
+    logicExp  go to state 36
+    number    go to state 14
+
+
+state 27
+
+   10 logicExps: logicExp logicExps .
+
+    $default  reduce using rule 10 (logicExps)
+
+
+state 28
+
+   21 assign: VAR ID ':' TYPE . ASSIGN literal ';'
+
+    ASSIGN  shift, and go to state 37
+
+
+state 29
+
+   12 logicExp: NOT logicExp ';' .
+
+    $default  reduce using rule 12 (logicExp)
+
+
+state 30
+
+    4 block: '{' stmts . '}'
+
+    '}'  shift, and go to state 38
+
+
+state 31
+
+   13 logicExp: logicExp . EQUALS logicExp ';'
+   13         | logicExp EQUALS logicExp . ';'
+   14         | logicExp . NOT_EQUALS logicExp ';'
+   15         | logicExp . GREATER_THAN logicExp ';'
+   16         | logicExp . GREATER_THAN_OR_EQUALS_TO logicExp ';'
+   17         | logicExp . LESS_THAN logicExp ';'
+   18         | logicExp . LESS_THAN_OR_EQUALS_TO logicExp ';'
+
+    EQUALS                     shift, and go to state 21
+    NOT_EQUALS                 shift, and go to state 22
+    LESS_THAN                  shift, and go to state 23
+    LESS_THAN_OR_EQUALS_TO     shift, and go to state 24
+    GREATER_THAN               shift, and go to state 25
+    GREATER_THAN_OR_EQUALS_TO  shift, and go to state 26
+    ';'                        shift, and go to state 39
+
+
+state 32
+
+   13 logicExp: logicExp . EQUALS logicExp ';'
+   14         | logicExp . NOT_EQUALS logicExp ';'
+   14         | logicExp NOT_EQUALS logicExp . ';'
+   15         | logicExp . GREATER_THAN logicExp ';'
+   16         | logicExp . GREATER_THAN_OR_EQUALS_TO logicExp ';'
+   17         | logicExp . LESS_THAN logicExp ';'
+   18         | logicExp . LESS_THAN_OR_EQUALS_TO logicExp ';'
+
+    EQUALS                     shift, and go to state 21
+    NOT_EQUALS                 shift, and go to state 22
+    LESS_THAN                  shift, and go to state 23
+    LESS_THAN_OR_EQUALS_TO     shift, and go to state 24
+    GREATER_THAN               shift, and go to state 25
+    GREATER_THAN_OR_EQUALS_TO  shift, and go to state 26
+    ';'                        shift, and go to state 40
+
+
+state 33
+
+   13 logicExp: logicExp . EQUALS logicExp ';'
+   14         | logicExp . NOT_EQUALS logicExp ';'
+   15         | logicExp . GREATER_THAN logicExp ';'
+   16         | logicExp . GREATER_THAN_OR_EQUALS_TO logicExp ';'
+   17         | logicExp . LESS_THAN logicExp ';'
+   17         | logicExp LESS_THAN logicExp . ';'
+   18         | logicExp . LESS_THAN_OR_EQUALS_TO logicExp ';'
+
+    EQUALS                     shift, and go to state 21
+    NOT_EQUALS                 shift, and go to state 22
+    LESS_THAN                  shift, and go to state 23
+    LESS_THAN_OR_EQUALS_TO     shift, and go to state 24
+    GREATER_THAN               shift, and go to state 25
+    GREATER_THAN_OR_EQUALS_TO  shift, and go to state 26
+    ';'                        shift, and go to state 41
+
+
+state 34
+
+   13 logicExp: logicExp . EQUALS logicExp ';'
+   14         | logicExp . NOT_EQUALS logicExp ';'
+   15         | logicExp . GREATER_THAN logicExp ';'
+   16         | logicExp . GREATER_THAN_OR_EQUALS_TO logicExp ';'
+   17         | logicExp . LESS_THAN logicExp ';'
+   18         | logicExp . LESS_THAN_OR_EQUALS_TO logicExp ';'
+   18         | logicExp LESS_THAN_OR_EQUALS_TO logicExp . ';'
+
+    EQUALS                     shift, and go to state 21
+    NOT_EQUALS                 shift, and go to state 22
+    LESS_THAN                  shift, and go to state 23
+    LESS_THAN_OR_EQUALS_TO     shift, and go to state 24
+    GREATER_THAN               shift, and go to state 25
+    GREATER_THAN_OR_EQUALS_TO  shift, and go to state 26
+    ';'                        shift, and go to state 42
+
+
+state 35
+
+   13 logicExp: logicExp . EQUALS logicExp ';'
+   14         | logicExp . NOT_EQUALS logicExp ';'
+   15         | logicExp . GREATER_THAN logicExp ';'
+   15         | logicExp GREATER_THAN logicExp . ';'
+   16         | logicExp . GREATER_THAN_OR_EQUALS_TO logicExp ';'
+   17         | logicExp . LESS_THAN logicExp ';'
+   18         | logicExp . LESS_THAN_OR_EQUALS_TO logicExp ';'
+
+    EQUALS                     shift, and go to state 21
+    NOT_EQUALS                 shift, and go to state 22
+    LESS_THAN                  shift, and go to state 23
+    LESS_THAN_OR_EQUALS_TO     shift, and go to state 24
+    GREATER_THAN               shift, and go to state 25
+    GREATER_THAN_OR_EQUALS_TO  shift, and go to state 26
+    ';'                        shift, and go to state 43
+
+
+state 36
+
+   13 logicExp: logicExp . EQUALS logicExp ';'
+   14         | logicExp . NOT_EQUALS logicExp ';'
+   15         | logicExp . GREATER_THAN logicExp ';'
+   16         | logicExp . GREATER_THAN_OR_EQUALS_TO logicExp ';'
+   16         | logicExp GREATER_THAN_OR_EQUALS_TO logicExp . ';'
+   17         | logicExp . LESS_THAN logicExp ';'
+   18         | logicExp . LESS_THAN_OR_EQUALS_TO logicExp ';'
+
+    EQUALS                     shift, and go to state 21
+    NOT_EQUALS                 shift, and go to state 22
+    LESS_THAN                  shift, and go to state 23
+    LESS_THAN_OR_EQUALS_TO     shift, and go to state 24
+    GREATER_THAN               shift, and go to state 25
+    GREATER_THAN_OR_EQUALS_TO  shift, and go to state 26
+    ';'                        shift, and go to state 44
+
+
+state 37
+
+   21 assign: VAR ID ':' TYPE ASSIGN . literal ';'
+
+    STRING   shift, and go to state 45
+    INTEGER  shift, and go to state 46
+    FLOAT    shift, and go to state 47
+
+    literal          go to state 48
+    literal_string   go to state 49
+    literal_integer  go to state 50
+    literal_float    go to state 51
+
+
+state 38
+
+    4 block: '{' stmts '}' .
+
+    $default  reduce using rule 4 (block)
+
+
+state 39
+
+   13 logicExp: logicExp EQUALS logicExp ';' .
+
+    $default  reduce using rule 13 (logicExp)
+
+
+state 40
+
+   14 logicExp: logicExp NOT_EQUALS logicExp ';' .
+
+    $default  reduce using rule 14 (logicExp)
+
+
+state 41
+
+   17 logicExp: logicExp LESS_THAN logicExp ';' .
+
+    $default  reduce using rule 17 (logicExp)
+
+
+state 42
+
+   18 logicExp: logicExp LESS_THAN_OR_EQUALS_TO logicExp ';' .
+
+    $default  reduce using rule 18 (logicExp)
+
+
+state 43
+
+   15 logicExp: logicExp GREATER_THAN logicExp ';' .
+
+    $default  reduce using rule 15 (logicExp)
+
+
+state 44
+
+   16 logicExp: logicExp GREATER_THAN_OR_EQUALS_TO logicExp ';' .
+
+    $default  reduce using rule 16 (logicExp)
+
+
+state 45
+
+   25 literal_string: STRING .
+
+    $default  reduce using rule 25 (literal_string)
+
+
+state 46
+
+   26 literal_integer: INTEGER .
+
+    $default  reduce using rule 26 (literal_integer)
+
+
+state 47
+
+   27 literal_float: FLOAT .
+
+    $default  reduce using rule 27 (literal_float)
+
+
+state 48
+
+   21 assign: VAR ID ':' TYPE ASSIGN literal . ';'
+
+    ';'  shift, and go to state 52
+
+
+state 49
+
+   22 literal: literal_string .
+
+    $default  reduce using rule 22 (literal)
+
+
+state 50
+
+   23 literal: literal_integer .
+
+    $default  reduce using rule 23 (literal)
+
+
+state 51
+
+   24 literal: literal_float .
+
+    $default  reduce using rule 24 (literal)
+
+
+state 52
+
+   21 assign: VAR ID ':' TYPE ASSIGN literal ';' .
+
+    $default  reduce using rule 21 (assign)
