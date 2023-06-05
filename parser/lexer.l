@@ -1,6 +1,6 @@
 %{
   #include <stdio.h>
-  #include "parser.tab.h"
+  #include "y.tab.h"
   
   extern int yyerror (char *msg);  
 %}
@@ -10,40 +10,40 @@
 [ \t\n]                         ;
 
 "var"                           {return(VAR);}
-"while"      			              {return(WHILE);}
-"do"      				              {return(DO);}
-"if"      				              {return(IF);}
-"else"      			              {return(ELSE);}
+"while"      			        {return(WHILE);}
+"do"      				        {return(DO);}
+"if"      				        {return(IF);}
+"else"      			        {return(ELSE);}
 "i32"                           {yylval.sValue = strdup("int"); 
                                 return TYPE;}
 "f32"                           {yylval.sValue = strdup("float"); 
                                 return TYPE;}
-"str"                           {yylval.sValue = strdup("float"); 
+"str"                           {yylval.sValue = strdup("string"); 
                                 return TYPE;}
 
-"("                             {return(yytext[0]);}
-")"                             {return(yytext[0]);}
-"["                             {return(yytext[0]);}
-"]"                             {return(yytext[0]);}
-"{"                             {return(yytext[0]);}
-"}"                             {return(yytext[0]);}
-":"                             {return(yytext[0]);}
-","                             {return(yytext[0]);}
-";"                             {return(yytext[0]);}
+"("                             {return(LEFT_PARENTHESIS);}
+")"                             {return(RIGHT_PARENTHESIS);}
+"["                             {return(LEFT_BRACKET);}
+"]"                             {return(RIGHT_BRACKET);}
+"{"                             {return(LEFT_CURLYBRACKET);}
+"}"                             {return(RIGHT_CURLYBRACKET);}
+":"                             {return(COLON);}
+","                             {return(COMMA);}
+";"                             {return(END);}
 
 
-"="					                    {return(ASSIGN);}
+"="					            {return(ASSIGN);}
 
 
-"=="              		          {return(EQUALS);}
+"=="              		        {return(EQUALS);}
 "!"                             {return(NOT);}
 "!="                            {return(NOT_EQUALS);}
 "<"                             {return(LESS_THAN);}
-"<="		        		            {return(LESS_THAN_OR_EQUALS_TO);}
-">"		        		              {return(GREATER_THAN);}
-">="		        		            {return(GREATER_THAN_OR_EQUALS_TO);}
-"or"		        		              {return(OR);}
-"and"		        		              {return(AND);}
+"<="		        		    {return(LESS_THAN_OR_EQUALS_TO);}
+">"		        		        {return(GREATER_THAN);}
+">="		        		    {return(GREATER_THAN_OR_EQUALS_TO);}
+"or"		        		    {return(OR);}
+"and"		        		    {return(AND);}
 
 
 [-+]?[0-9]+        	            {yylval.iValue = atoi(yytext); 
