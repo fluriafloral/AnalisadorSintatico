@@ -33,12 +33,12 @@ prog : stm      {}
      | stm prog {} 
 	 ;
 
-stm : VAR ID COLON TYPE ASSIGN expr END {printf("var %s:%s = %s\n", $2, $4, $6);}
-    | if_stm                            {printf("if (\n");}
+stm : VAR ID COLON TYPE ASSIGN expr END {printf("assign %s(%s) = %s\n", $2, $4, $6);}
+    | if_stm                            {printf("if\n");}
 	;
 
-if_stm : IF LEFT_PARENTHESIS logicExprs RIGHT_PARENTHESIS LEFT_CURLYBRACKET prog RIGHT_CURLYBRACKET {printf(")\n");}
-       | IF logicExprs LEFT_CURLYBRACKET prog RIGHT_CURLYBRACKET {printf(")\n");}
+if_stm : IF LEFT_PARENTHESIS logicExprs RIGHT_PARENTHESIS LEFT_CURLYBRACKET prog RIGHT_CURLYBRACKET {}
+       | IF logicExprs LEFT_CURLYBRACKET prog RIGHT_CURLYBRACKET {}
        ;
        	    
 expr : ID      {$$ = $1;}
@@ -51,31 +51,13 @@ expr : ID      {$$ = $1;}
      | STRING  {$$ = $1;}
      ;
      
-logicExprs : logicExprs AND logicExpr                      {printf("%s\nand\n%s\n", $1, $3);
-                                                           $$ = $1;}
-           | logicExprs OR logicExpr                       {printf("%s\nor\n%s\n", $1, $3);
-                                                           $$ = $1;}                                            
-           | logicExpr                                     {$$ = $1;}
+logicExprs : logicExpr AND logicExprs                      {printf("and\n");}
+           | logicExpr OR logicExprs                       {printf("or\n");}                                            
+           | logicExpr                                     {}
 	       ;
 	      
-logicExpr : INTEGER EQUALS INTEGER       {char * n1 = (char *) malloc(10);
-                                         char * n2 = (char *) malloc(10);
-                                         sprintf(n1, "%d", $1);
-                                         sprintf(n2, "%d", $3);
-                                         char * str = malloc(sizeof(n1)+sizeof(n2)+7);
-                                         sprintf(str,"%s == %s", n1, n2);
-                                         free(n1);
-                                         free(n2);
-                                         $$ = str;}
-          | INTEGER GREATER_THAN INTEGER {char * n1 = (char *) malloc(10);
-                                         char * n2 = (char *) malloc(10);
-                                         sprintf(n1, "%d", $1);
-                                         sprintf(n2, "%d", $3);
-                                         char * str = malloc(sizeof(n1)+sizeof(n2)+6);
-                                         sprintf(str,"%s > %s", n1, n2);
-                                         free(n1);
-                                         free(n2);
-                                         $$ = str;}
+logicExpr : expr EQUALS expr       {printf("%s == %s\n", $1, $3);}
+          | expr GREATER_THAN expr {printf("%s >= %s\n", $1, $3);}
 	      ;
 	      
 %%
