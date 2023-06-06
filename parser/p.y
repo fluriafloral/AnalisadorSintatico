@@ -26,20 +26,21 @@ extern char * yytext;
 
 %start prog
 
-%type <sValue> stm stmList expr logicExprs logicExpr 
+%type <sValue> stm expr logicExprs logicExpr prog 
 
 %%
-prog : stmList {} 
+prog : stm      {}
+     | stm prog {} 
 	 ;
 
-stm :   VAR ID COLON TYPE ASSIGN expr                              {printf("var %s:%s = %s\n", $2, $4, $6);}
-      | IF logicExprs LEFT_CURLYBRACKET stmList RIGHT_CURLYBRACKET {printf("if %s { %s }\n", $2, $4);}
-	  ;
-	
-stmList : stm             {$$ = $1;}
-		| stm END stmList {sprintf($$, "%s;\n%s", $1, $3);}
-	    ;
-	    
+stm : VAR ID COLON TYPE ASSIGN expr END {printf("var %s:%s = %s\n", $2, $4, $6);}
+    | if_stm                            {printf("if (\n");}
+	;
+
+if_stm : IF LEFT_PARENTHESIS logicExprs RIGHT_PARENTHESIS LEFT_CURLYBRACKET prog RIGHT_CURLYBRACKET {printf(")\n");}
+       | IF logicExprs LEFT_CURLYBRACKET prog RIGHT_CURLYBRACKET {printf(")\n");}
+       ;
+       	    
 expr : ID      {$$ = $1;}
      | INTEGER {char * n = (char *) malloc(10);
                sprintf(n, "%i", $1);
@@ -50,17 +51,18 @@ expr : ID      {$$ = $1;}
      | STRING  {$$ = $1;}
      ;
      
-logicExprs : logicExpr                                     {$$ = $1;}
-           | LEFT_PARENTHESIS logicExprs RIGHT_PARENTHESIS {$$ = $2;}
-           | logicExpr AND logicExprs                      {sprintf($$, "%s and %s", $3, $1);}
-           | logicExpr OR logicExprs                       {sprintf($$, "%s or %s", $3, $1);}
+logicExprs : logicExprs AND logicExpr                      {printf("%s\nand\n%s\n", $1, $3);
+                                                           $$ = $1;}
+           | logicExprs OR logicExpr                       {printf("%s\nor\n%s\n", $1, $3);
+                                                           $$ = $1;}                                            
+           | logicExpr                                     {$$ = $1;}
 	       ;
 	      
 logicExpr : INTEGER EQUALS INTEGER       {char * n1 = (char *) malloc(10);
                                          char * n2 = (char *) malloc(10);
                                          sprintf(n1, "%d", $1);
                                          sprintf(n2, "%d", $3);
-                                         char * str = malloc(sizeof(char) * sizeof(n1)+sizeof(n2)+6);
+                                         char * str = malloc(sizeof(n1)+sizeof(n2)+7);
                                          sprintf(str,"%s == %s", n1, n2);
                                          free(n1);
                                          free(n2);
@@ -69,7 +71,7 @@ logicExpr : INTEGER EQUALS INTEGER       {char * n1 = (char *) malloc(10);
                                          char * n2 = (char *) malloc(10);
                                          sprintf(n1, "%d", $1);
                                          sprintf(n2, "%d", $3);
-                                         char * str = malloc(sizeof(char) * sizeof(n1)+sizeof(n2)+5);
+                                         char * str = malloc(sizeof(n1)+sizeof(n2)+6);
                                          sprintf(str,"%s > %s", n1, n2);
                                          free(n1);
                                          free(n2);
