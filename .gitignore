@@ -1,3 +1,5 @@
+*.tab.c
+*.tab.h
 *.out
 *.output
 *.c
