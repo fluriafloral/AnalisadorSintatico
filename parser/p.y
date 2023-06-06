@@ -1,13 +1,3 @@
-%{
-#include <stdio.h>
-
-int yylex(void);
-int yyerror(char *s);
-extern int yylineno;
-extern char * yytext;
-
-%}
-
 %union {
 	int    iValue; 	/* integer value */
 	float  fValue; 	/* float value */
@@ -33,14 +23,29 @@ prog : stm      {}
      | stm prog {} 
 	 ;
 
-stm : VAR ID COLON TYPE ASSIGN expr END {printf("assign %s(%s) = %s\n", $2, $4, $6);}
-    | if_stm                            {printf("if\n");}
+stm : assign    {printf("assign\n");}
+    | if_stm    {printf("if\n");}
+    | for_stm   {printf("for\n");}
+    | while_stm {printf("while\n");}
+    | func_stm  {printf("func\n");}
 	;
+
+assign: VAR ID COLON TYPE ASSIGN expr END {printf("%s(%s) = %s\n", $2, $4, $6);}
+      ;
 
 if_stm : IF LEFT_PARENTHESIS logicExprs RIGHT_PARENTHESIS LEFT_CURLYBRACKET prog RIGHT_CURLYBRACKET {}
        | IF logicExprs LEFT_CURLYBRACKET prog RIGHT_CURLYBRACKET {}
        ;
-       	    
+
+for_stm: 
+       ;
+
+while_stm: 
+         ;
+
+func_stm: 
+        ;
+       	 	    
 expr : ID      {$$ = $1;}
      | INTEGER {char * n = (char *) malloc(10);
                sprintf(n, "%i", $1);
