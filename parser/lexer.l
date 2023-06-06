@@ -45,6 +45,9 @@
 "or"		        		    {return(OR);}
 "and"		        		    {return(AND);}
 
+"for"                           {return(FOR);}
+"while"                         {return(WHILE);}
+"fn"                            {return(FUNC);}
 
 [-+]?[0-9]+        	            {yylval.iValue = atoi(yytext); 
                                 return INTEGER;}
