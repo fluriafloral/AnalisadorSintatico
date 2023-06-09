@@ -9,7 +9,7 @@ ou
 bison parser.y -d -v
 
 //compilar léxico e sintático
-gcc lex.yy.c parser.tab.c -o parser
+gcc lex.yy.c p.tab.c -o parser
 
 //executar os testes
 parser < ../testes/teste1.txt

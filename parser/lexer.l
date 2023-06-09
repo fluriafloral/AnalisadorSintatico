@@ -1,6 +1,6 @@
 %{
   #include <stdio.h>
-  #include "y.tab.h"
+  #include "p.tab.h"
   
   extern int yyerror (char *msg);  
 %}
@@ -9,11 +9,6 @@
 
 [ \t\n]                         ;
 
-"var"                           {return(VAR);}
-"while"      			        {return(WHILE);}
-"do"      				        {return(DO);}
-"if"      				        {return(IF);}
-"else"      			        {return(ELSE);}
 "i32"                           {yylval.sValue = strdup("int"); 
                                 return TYPE;}
 "f32"                           {yylval.sValue = strdup("float"); 
@@ -32,22 +27,27 @@
 ";"                             {return(END);}
 
 
-"="					            {return(ASSIGN);}
+"="					                    {return(ASSIGN);}
 
 
-"=="              		        {return(EQUALS);}
+"=="              		          {return(EQUALS);}
 "!"                             {return(NOT);}
 "!="                            {return(NOT_EQUALS);}
 "<"                             {return(LESS_THAN);}
-"<="		        		    {return(LESS_THAN_OR_EQUALS_TO);}
-">"		        		        {return(GREATER_THAN);}
-">="		        		    {return(GREATER_THAN_OR_EQUALS_TO);}
-"or"		        		    {return(OR);}
-"and"		        		    {return(AND);}
+"<="		        		            {return(LESS_THAN_OR_EQUALS_TO);}
+">"		        		              {return(GREATER_THAN);}
+">="		        		            {return(GREATER_THAN_OR_EQUALS_TO);}
+"or"		        		            {return(OR);}
+"and"		        		            {return(AND);}
 
-"for"                           {return(FOR);}
+"var"                           {return(VAR);}
+"if"      				              {return(IF);}
+"else"      			              {return(ELSE);}
+"do"      				              {return(DO);}
 "while"                         {return(WHILE);}
+"for"                           {return(FOR);}
 "fn"                            {return(FUNC);}
+"return"                        {return(RETURN);}
 
 [-+]?[0-9]+        	            {yylval.iValue = atoi(yytext); 
                                 return INTEGER;}
