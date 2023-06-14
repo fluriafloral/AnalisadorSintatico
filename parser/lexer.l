@@ -40,6 +40,17 @@
 "or"		        		            {return(OR);}
 "and"		        		            {return(AND);}
 
+"+" 			                 	  	{return(ADDITION);}
+"+=" 			                 	  	{return(ADDITION_AND_ASSIGN);}
+"-" 			                 	  	{return(SUBTRACTION);}
+"-=" 			                  		{return(SUBTRACTION_AND_ASSIGN);}
+"*" 			                  		{return(MULTIPLICATION);}
+"*=" 			                 	  	{return(MULTIPLICATION_AND_ASSIGN);}
+"/" 			                  		{return(DIVISION);}
+"/=" 			                  		{return(DIVISION_AND_ASSIGN);}
+"%" 			        	          	{return(REMAINDER);}
+"%=" 			                    	{return(REMAINDER_AND_ASSIGN);}
+
 "var"                           {return(VAR);}
 "if"      				              {return(IF);}
 "else"      			              {return(ELSE);}
