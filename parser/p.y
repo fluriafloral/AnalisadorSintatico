@@ -29,7 +29,7 @@ extern char * yytext;
 
 %start prog
 
-%type <sValue> stm exprs expr logicExprs logicExpr prog 
+%type <sValue> stm exprs expr logicExprs logicExpr index prog 
 %type <sValue> params param
 
 %%
@@ -45,15 +45,20 @@ stm : assign                                          {printf("assign\n");}
     | while_stm                                       {printf("while\n");}
     ;
 
-assign: VAR ID COLON TYPE ASSIGN exprs END            {printf("%s(%s) = %s\n", $2, $4, $6);}
-      | ID ASSIGN exprs END                           {printf("%s = %s\n", $1, $3);}
-      | ID ADDITION_AND_ASSIGN exprs END              {printf("%s += %s\n", $1, $3);}
-      | ID SUBTRACTION_AND_ASSIGN exprs END           {printf("%s -= %s\n", $1, $3);}
-      | ID MULTIPLICATION_AND_ASSIGN exprs END        {printf("%s *= %s\n", $1, $3);}
-      | ID DIVISION_AND_ASSIGN exprs END              {printf("%s /= %s\n", $1, $3);}
-      | ID REMAINDER_AND_ASSIGN exprs END             {printf("%s %= %s\n", $1, $3);}
+assign: VAR ID COLON TYPE ASSIGN exprs END                                    {printf("%s(%s) = %s\n", $2, $4, $6);}
+      | VAR ID COLON TYPE ASSIGN LEFT_BRACKET index RIGHT_BRACKET END         {printf("%s(%s) = []\n", $2, $4);}
+      | ID ASSIGN exprs END                                                   {printf("%s = %s\n", $1, $3);}
+      | ID ADDITION_AND_ASSIGN exprs END                                      {printf("%s += %s\n", $1, $3);}
+      | ID SUBTRACTION_AND_ASSIGN exprs END                                   {printf("%s -= %s\n", $1, $3);}
+      | ID MULTIPLICATION_AND_ASSIGN exprs END                                {printf("%s *= %s\n", $1, $3);}
+      | ID DIVISION_AND_ASSIGN exprs END                                      {printf("%s /= %s\n", $1, $3);}
+      | ID REMAINDER_AND_ASSIGN exprs END                                     {printf("%s %= %s\n", $1, $3);}
       ;
     
+index :                                             {}
+      | exprs                                       {}
+      | exprs COMMA index                           {}
+      ;
 
 if_stm : IF LEFT_PARENTHESIS logicExprs RIGHT_PARENTHESIS LEFT_CURLYBRACKET prog RIGHT_CURLYBRACKET {}
        | IF logicExprs LEFT_CURLYBRACKET prog RIGHT_CURLYBRACKET {}
@@ -78,6 +83,7 @@ param : ID COLON TYPE                                         {}
       ;
 
 exprs : expr                                                  {}
+      | LEFT_PARENTHESIS exprs RIGHT_PARENTHESIS              {}
       | expr ADDITION exprs                                   {}
       | expr SUBTRACTION exprs                                {}
       | expr MULTIPLICATION exprs                             {}
