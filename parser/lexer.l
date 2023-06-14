@@ -41,8 +41,10 @@
 "and"		        		            {return(AND);}
 
 "+" 			                 	  	{return(ADDITION);}
+"++"			        	            {return(PLUS_PLUS);}
 "+=" 			                 	  	{return(ADDITION_AND_ASSIGN);}
 "-" 			                 	  	{return(SUBTRACTION);}
+"--"			        	            {return(MINUS_MINUS);}
 "-=" 			                  		{return(SUBTRACTION_AND_ASSIGN);}
 "*" 			                  		{return(MULTIPLICATION);}
 "*=" 			                 	  	{return(MULTIPLICATION_AND_ASSIGN);}
@@ -58,6 +60,7 @@
 "while"                         {return(WHILE);}
 "for"                           {return(FOR);}
 "fn"                            {return(FUNC);}
+"in"                            {return(IN);}
 "return"                        {return(RETURN);}
 
 [-+]?[0-9]+        	            {yylval.iValue = atoi(yytext); 

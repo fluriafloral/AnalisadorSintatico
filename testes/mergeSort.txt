@@ -1,0 +1,54 @@
+fn mergeSort(v:[i32], left:i32,right:i32) {   
+        
+    if (left >= right) {
+        return v;
+    }        
+    else {
+        
+        var middle:i32 = left + right / 2;
+        mergeSort(v, left, middle);
+        mergeSort(v, middle + 1, right);
+
+        merge(v, left, middle, right);
+    }
+}
+
+fn merge(v:[i32], left:i32, middle:i32, right:i32) {
+    
+    var helper:i32 = [];
+
+    for (var i:i32 = left; i <= right; i++) {
+        helper[i] = v[i];
+    }
+    
+    
+    var i:i32 = left;
+    var j:i32 = middle + 1;
+    var k:i32 = left;
+    
+    while (i <= middle and j <= right) {
+        
+        if (helper[i] <= helper[j]) {
+            v[k] = helper[i];
+            i++;
+        } else {
+            v[k] = helper[j];
+            j++;
+        }
+        k++;    
+        
+    }
+    
+    while (i <= middle) {
+        v[k] = helper[i];
+        i++;
+        k++;
+    }
+    
+    while (j <= right) {
+        v[k] = helper[j];
+        j++;
+        k++;
+    }
+
+}
