@@ -1,3 +1,6 @@
 var nome:str = "fulano";
+var n:i16 = 1;
 var idade:i32 = 28;
+var m:i64 = 4984949499;
 var altura:f32 = 1.75;
+var altura:f64 = 1.7552352;
