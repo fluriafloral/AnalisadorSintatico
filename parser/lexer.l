@@ -1,6 +1,6 @@
 %{
   #include <stdio.h>
-  #include "p.tab.h"
+  #include "y.tab.h"
   
   extern int yyerror (char *msg);  
 %}
@@ -8,10 +8,15 @@
 %%
 
 [ \t\n]                         ;
-
+"i16"                           {yylval.sValue = strdup("short"); 
+                                return TYPE;}
 "i32"                           {yylval.sValue = strdup("int"); 
                                 return TYPE;}
+"i64"                           {yylval.sValue = strdup("long"); 
+                                return TYPE;}
 "f32"                           {yylval.sValue = strdup("float"); 
+                                return TYPE;}
+"f64"                           {yylval.sValue = strdup("double"); 
                                 return TYPE;}
 "str"                           {yylval.sValue = strdup("string"); 
                                 return TYPE;}

@@ -9,16 +9,22 @@ extern char * yytext;
 %}
 
 %union {
+    short  hValue;  /* short value */
 	int    iValue; 	/* integer value */
+    long   lValue; 	/* long value */
 	float  fValue; 	/* float value */
+    double dValue; 	/* double value */
 	char   cValue; 	/* char value */
 	char * sValue;  /* string value */
 	};
 
 
 %token <sValue> ID
+%token <hValue> SHORT
 %token <iValue> INTEGER
+%token <lValue> LONG
 %token <fValue> FLOAT
+%token <dValue> DOUBLE
 %token <sValue> STRING
 %token <sValue> TYPE
 %token ADDITION SUBTRACTION MULTIPLICATION DIVISION REMAINDER PLUS_PLUS MINUS_MINUS
@@ -29,7 +35,7 @@ extern char * yytext;
 
 %start prog
 
-%type <sValue> stm exprs expr logicExprs logicExpr index prog 
+%type <sValue> stm exprs expr logicExprs logicExpr index prog primitive
 %type <sValue> assign_params assign_param params
 
 %%
@@ -79,10 +85,10 @@ for_stm: FOR LEFT_PARENTHESIS assign END logicExprs END exprs RIGHT_PARENTHESIS 
 while_stm: WHILE LEFT_PARENTHESIS logicExprs RIGHT_PARENTHESIS LEFT_CURLYBRACKET prog RIGHT_CURLYBRACKET {}
          ;     
 
-assign_params:                                                {}
-      | assign_param                                          {}
-      | assign_param COMMA assign_params                      {}
-      ;
+assign_params:                                                       {}
+             | assign_param                                          {}
+             | assign_param COMMA assign_params                      {}
+             ;
 
 assign_param : ID COLON TYPE                                  {}
       | ID COLON LEFT_BRACKET TYPE RIGHT_BRACKET              {}
@@ -106,7 +112,7 @@ logicExpr : exprs EQUALS exprs                             {printf("%s == %s\n",
           | exprs GREATER_THAN_OR_EQUALS_TO exprs          {printf("%s >= %s\n", $1, $3);}
           | exprs LESS_THAN exprs                          {printf("%s < %s\n", $1, $3);}
           | exprs LESS_THAN_OR_EQUALS_TO exprs             {printf("%s <= %s\n", $1, $3);}
-	    ;
+	      ;
 
 exprs : expr                                                  {}
       | LEFT_PARENTHESIS exprs RIGHT_PARENTHESIS              {}
@@ -120,17 +126,28 @@ exprs : expr                                                  {}
       ;
 
 expr : ID      {$$ = $1;}
-     | INTEGER {char * n = (char *) malloc(10);
-               sprintf(n, "%i", $1);
-               $$ = n;}
-     | FLOAT   {char * n = (char *) malloc(10);
-               sprintf(n, "%f", $1);
-               $$ = n;}
-     | STRING  {$$ = $1;}
+     | primitive {}
      | ID LEFT_BRACKET exprs RIGHT_BRACKET        {}
      | ID LEFT_PARENTHESIS params RIGHT_PARENTHESIS {}
      ;
 
+primitive : SHORT   {char * n = (char *) malloc(10);
+                    sprintf(n, "%i", $1);
+                    $$ = n;}
+          | INTEGER {char * n = (char *) malloc(10);
+                    sprintf(n, "%i", $1);
+                    $$ = n;}
+          | LONG    {char * n = (char *) malloc(10);
+                    sprintf(n, "%ld", $1);
+                    $$ = n;}
+          | FLOAT   {char * n = (char *) malloc(10);
+                    sprintf(n, "%f", $1);
+                    $$ = n;}
+          | DOUBLE  {char * n = (char *) malloc(10);
+                    sprintf(n, "%f", $1);
+                    $$ = n;}
+          | STRING  {$$ = $1;}
+          ;
 %%
 
 int main (void) {
