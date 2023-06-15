@@ -49,7 +49,7 @@ stm :                                                 {}
 
 assign: VAR ID COLON TYPE ASSIGN exprs                                    {printf("%s(%s) = %s\n", $2, $4, $6);}
       | VAR ID COLON TYPE ASSIGN LEFT_BRACKET index RIGHT_BRACKET         {printf("%s(%s) = []\n", $2, $4);}
-      | ID LEFT_BRACKET exprs RIGHT_BRACKET ASSIGN expr                   {printf("%s[] = other array\n", $1);}
+      | ID LEFT_BRACKET exprs RIGHT_BRACKET ASSIGN expr                   {printf("%s[] = array\n", $1);}
       | ID ASSIGN exprs                                                   {printf("%s = %s\n", $1, $3);}
       | ID ADDITION_AND_ASSIGN exprs                                      {printf("%s += %s\n", $1, $3);}
       | ID SUBTRACTION_AND_ASSIGN exprs                                   {printf("%s -= %s\n", $1, $3);}
@@ -63,9 +63,7 @@ index :                                             {}
       | exprs COMMA index                           {}
       ;
 
-if_stm : IF LEFT_PARENTHESIS logicExprs RIGHT_PARENTHESIS LEFT_CURLYBRACKET prog RIGHT_CURLYBRACKET {}
-       | IF LEFT_PARENTHESIS logicExprs RIGHT_PARENTHESIS LEFT_CURLYBRACKET prog RIGHT_CURLYBRACKET ELSE LEFT_CURLYBRACKET prog RIGHT_CURLYBRACKET {}
-       | IF logicExprs LEFT_CURLYBRACKET prog RIGHT_CURLYBRACKET {}
+if_stm : IF logicExprs LEFT_CURLYBRACKET prog RIGHT_CURLYBRACKET {}
        | IF logicExprs LEFT_CURLYBRACKET prog RIGHT_CURLYBRACKET ELSE LEFT_CURLYBRACKET prog RIGHT_CURLYBRACKET {}
        ;
 
@@ -127,7 +125,7 @@ expr : ID      {$$ = $1;}
                sprintf(n, "%f", $1);
                $$ = n;}
      | STRING  {$$ = $1;}
-     | ID LEFT_BRACKET exprs RIGHT_BRACKET        {}
+     | ID LEFT_BRACKET exprs RIGHT_BRACKET          {}
      | ID LEFT_PARENTHESIS params RIGHT_PARENTHESIS {}
      ;
 
