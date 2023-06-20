@@ -61,7 +61,7 @@ assign: VAR ID COLON TYPE ASSIGN exprs                                    {print
       | ID SUBTRACTION_AND_ASSIGN exprs                                   {printf("%s -= %s\n", $1, $3);}
       | ID MULTIPLICATION_AND_ASSIGN exprs                                {printf("%s *= %s\n", $1, $3);}
       | ID DIVISION_AND_ASSIGN exprs                                      {printf("%s /= %s\n", $1, $3);}
-      | ID REMAINDER_AND_ASSIGN exprs                                     {printf("%s %= %s\n", $1, $3);}
+      | ID REMAINDER_AND_ASSIGN exprs                                     {printf("%s mod = %s\n", $1, $3);}
       ;
     
 index :                                             {}
@@ -112,31 +112,20 @@ logicExpr : exprs EQUALS exprs                             {printf("%s == %s\n",
           | exprs LESS_THAN_OR_EQUALS_TO exprs             {printf("%s <= %s\n", $1, $3);}
 	      ;
 
-exprs : expr                                                  {}
-      | LEFT_PARENTHESIS exprs RIGHT_PARENTHESIS              {}
-      | expr ADDITION exprs                                   {}
-      | expr SUBTRACTION exprs                                {}
-      | expr MULTIPLICATION exprs                             {}
-      | expr DIVISION exprs                                   {}
-      | expr REMAINDER exprs                                  {}
-      | expr PLUS_PLUS                                        {}
-      | expr MINUS_MINUS                                      {}
+exprs : expr                                                  {$$ == $1;}
+      | LEFT_PARENTHESIS exprs RIGHT_PARENTHESIS              {$$ == $2;}
+      | expr ADDITION exprs                                   {$$ == $1;}
+      | expr SUBTRACTION exprs                                {$$ == $1;}
+      | expr MULTIPLICATION exprs                             {$$ == $1;}
+      | expr DIVISION exprs                                   {$$ == $1;}
+      | expr REMAINDER exprs                                  {$$ == $1;}
+      | expr PLUS_PLUS                                        {$$ == $1;}
+      | expr MINUS_MINUS                                      {$$ == $1;}
       ;
 
 expr : ID      {$$ = $1;}
-<<<<<<< HEAD
      | primitive {}
-     | ID LEFT_BRACKET exprs RIGHT_BRACKET        {}
-=======
-     | INTEGER {char * n = (char *) malloc(10);
-               sprintf(n, "%i", $1);
-               $$ = n;}
-     | FLOAT   {char * n = (char *) malloc(10);
-               sprintf(n, "%f", $1);
-               $$ = n;}
-     | STRING  {$$ = $1;}
      | ID LEFT_BRACKET exprs RIGHT_BRACKET          {}
->>>>>>> db146955e8605a0691744adee4364ae0cc4b7ebc
      | ID LEFT_PARENTHESIS params RIGHT_PARENTHESIS {}
      ;
 
