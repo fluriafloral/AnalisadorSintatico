@@ -9,11 +9,11 @@ extern char * yytext;
 %}
 
 %union {
-    short  hValue;  /* short value */
+  short  hValue;  /* short value */
 	int    iValue; 	/* integer value */
-    long   lValue; 	/* long value */
+  long   lValue; 	/* long value */
 	float  fValue; 	/* float value */
-    double dValue; 	/* double value */
+  double dValue; 	/* double value */
 	char   cValue; 	/* char value */
 	char * sValue;  /* string value */
 	};
@@ -36,61 +36,69 @@ extern char * yytext;
 %start prog
 
 %type <sValue> stm exprs expr logicExprs logicExpr index prog primitive
-%type <sValue> assign_params assign_param params
+%type <sValue> assign_params assign_param params subprograms subprogram stms
 
 %%
-prog : stm      {}
-     | stm prog {} 
-	 ;
+prog : subprograms {} 
+     ;
 
-stm :                                                 {} 
-    | assign END                                      {printf("assign\n");}
-    | exprs END                                       {printf("exprs\n");}
-    | if_stm                                          {printf("if\n");}
-    | func_stm                                        {printf("func\n");}
-    | for_stm                                         {printf("for\n");}
-    | while_stm                                       {printf("while\n");}
-    | RETURN exprs END                                {}
+subprograms : subprogram {}
+            | subprogram subprograms {}
+            ;
+
+subprogram : stms {}
+           ;
+
+stms : stm       {}    
+     | stm stms  {}
+     ;
+
+stm : assign END       {printf("assign\n");}
+    | if_stm           {printf("if\n");}
+    | func_stm         {printf("func\n");}
+    | for_stm          {printf("for\n");}
+    | while_stm        {printf("while\n");}
+    | exprs END        {printf("exprs\n");}
+    | RETURN exprs END {}
     ;
 
-assign: VAR ID COLON TYPE ASSIGN exprs                                    {printf("%s(%s) = %s\n", $2, $4, $6);}
-      | VAR ID COLON TYPE ASSIGN LEFT_BRACKET index RIGHT_BRACKET         {printf("%s(%s) = []\n", $2, $4);}
-      | ID LEFT_BRACKET exprs RIGHT_BRACKET ASSIGN expr                   {printf("%s[] = array\n", $1);}
-      | ID ASSIGN exprs                                                   {printf("%s = %s\n", $1, $3);}
-      | ID ADDITION_AND_ASSIGN exprs                                      {printf("%s += %s\n", $1, $3);}
-      | ID SUBTRACTION_AND_ASSIGN exprs                                   {printf("%s -= %s\n", $1, $3);}
-      | ID MULTIPLICATION_AND_ASSIGN exprs                                {printf("%s *= %s\n", $1, $3);}
-      | ID DIVISION_AND_ASSIGN exprs                                      {printf("%s /= %s\n", $1, $3);}
-      | ID REMAINDER_AND_ASSIGN exprs                                     {printf("%s mod = %s\n", $1, $3);}
-      ;
+assign : VAR ID COLON TYPE ASSIGN exprs                                    {printf("%s(%s) = %s\n", $2, $4, $6);}
+       | VAR ID COLON TYPE ASSIGN LEFT_BRACKET index RIGHT_BRACKET         {printf("%s(%s) = []\n", $2, $4);}
+       | ID LEFT_BRACKET exprs RIGHT_BRACKET ASSIGN expr                   {printf("%s[] = array\n", $1);}
+       | ID ASSIGN exprs                                                   {printf("%s = %s\n", $1, $3);}
+       | ID ADDITION_AND_ASSIGN exprs                                      {printf("%s += %s\n", $1, $3);}
+       | ID SUBTRACTION_AND_ASSIGN exprs                                   {printf("%s -= %s\n", $1, $3);}
+       | ID MULTIPLICATION_AND_ASSIGN exprs                                {printf("%s *= %s\n", $1, $3);}
+       | ID DIVISION_AND_ASSIGN exprs                                      {printf("%s /= %s\n", $1, $3);}
+       | ID REMAINDER_AND_ASSIGN exprs                                     {printf("%s mod= %s\n", $1, $3);}
+       ;
     
 index :                                             {}
       | exprs                                       {}
       | exprs COMMA index                           {}
       ;
 
-if_stm : IF logicExprs LEFT_CURLYBRACKET prog RIGHT_CURLYBRACKET {}
-       | IF logicExprs LEFT_CURLYBRACKET prog RIGHT_CURLYBRACKET ELSE LEFT_CURLYBRACKET prog RIGHT_CURLYBRACKET {}
+if_stm : IF logicExprs LEFT_CURLYBRACKET stms RIGHT_CURLYBRACKET {}
+       | IF logicExprs LEFT_CURLYBRACKET stms RIGHT_CURLYBRACKET ELSE LEFT_CURLYBRACKET stms RIGHT_CURLYBRACKET {}
        ;
 
-func_stm: FUNC ID LEFT_PARENTHESIS assign_params RIGHT_PARENTHESIS LEFT_CURLYBRACKET prog RIGHT_CURLYBRACKET {}
-        | FUNC ID LEFT_PARENTHESIS assign_params RIGHT_PARENTHESIS LEFT_CURLYBRACKET prog RETURN exprs END RIGHT_CURLYBRACKET {}
+func_stm : FUNC ID LEFT_PARENTHESIS assign_params RIGHT_PARENTHESIS LEFT_CURLYBRACKET stms RIGHT_CURLYBRACKET {}
+         ;
+
+for_stm : FOR LEFT_PARENTHESIS assign END logicExprs END exprs RIGHT_PARENTHESIS LEFT_CURLYBRACKET stms RIGHT_CURLYBRACKET {}
         ;
 
-for_stm: FOR LEFT_PARENTHESIS assign END logicExprs END exprs RIGHT_PARENTHESIS LEFT_CURLYBRACKET prog RIGHT_CURLYBRACKET {}
-       ;
-
-while_stm: WHILE LEFT_PARENTHESIS logicExprs RIGHT_PARENTHESIS LEFT_CURLYBRACKET prog RIGHT_CURLYBRACKET {}
-         ;     
+while_stm : WHILE LEFT_PARENTHESIS logicExprs RIGHT_PARENTHESIS LEFT_CURLYBRACKET stms RIGHT_CURLYBRACKET {}
+          ;     
 
 assign_params:                                                       {}
              | assign_param                                          {}
              | assign_param COMMA assign_params                      {}
              ;
 
-assign_param : ID COLON TYPE                                  {}
-      | ID COLON LEFT_BRACKET TYPE RIGHT_BRACKET              {}
-      ;
+assign_param : ID COLON TYPE                            {}
+             | ID COLON LEFT_BRACKET TYPE RIGHT_BRACKET {}
+             ;
 
 params:                                                       {}
       | exprs                                                 {}
@@ -102,7 +110,7 @@ logicExprs : logicExpr AND logicExprs                      {printf("and\n");}
            | LEFT_PARENTHESIS logicExprs RIGHT_PARENTHESIS {}       
            | NOT logicExprs                                {}                     
            | logicExpr                                     {}
-	       ;
+	         ;
 	      
 logicExpr : exprs EQUALS exprs                             {printf("%s == %s\n", $1, $3);}
           | exprs NOT_EQUALS exprs                         {printf("%s != %s\n", $1, $3);}
@@ -110,21 +118,21 @@ logicExpr : exprs EQUALS exprs                             {printf("%s == %s\n",
           | exprs GREATER_THAN_OR_EQUALS_TO exprs          {printf("%s >= %s\n", $1, $3);}
           | exprs LESS_THAN exprs                          {printf("%s < %s\n", $1, $3);}
           | exprs LESS_THAN_OR_EQUALS_TO exprs             {printf("%s <= %s\n", $1, $3);}
-	      ;
+	        ;
 
-exprs : expr                                                  {$$ == $1;}
-      | LEFT_PARENTHESIS exprs RIGHT_PARENTHESIS              {$$ == $2;}
-      | expr ADDITION exprs                                   {$$ == $1;}
-      | expr SUBTRACTION exprs                                {$$ == $1;}
-      | expr MULTIPLICATION exprs                             {$$ == $1;}
-      | expr DIVISION exprs                                   {$$ == $1;}
-      | expr REMAINDER exprs                                  {$$ == $1;}
-      | expr PLUS_PLUS                                        {$$ == $1;}
-      | expr MINUS_MINUS                                      {$$ == $1;}
+exprs : expr                                                  {}
+      | LEFT_PARENTHESIS exprs RIGHT_PARENTHESIS              {}
+      | expr ADDITION exprs                                   {}
+      | expr SUBTRACTION exprs                                {}
+      | expr MULTIPLICATION exprs                             {}
+      | expr DIVISION exprs                                   {}
+      | expr REMAINDER exprs                                  {}
+      | expr PLUS_PLUS                                        {}
+      | expr MINUS_MINUS                                      {}
       ;
 
-expr : ID      {$$ = $1;}
-     | primitive {}
+expr : ID                                           {$$ = $1;}
+     | primitive                                    {}
      | ID LEFT_BRACKET exprs RIGHT_BRACKET          {}
      | ID LEFT_PARENTHESIS params RIGHT_PARENTHESIS {}
      ;
