@@ -136,19 +136,24 @@ expr : LEFT_PARENTHESIS exprs RIGHT_PARENTHESIS     {}
      | ID LEFT_PARENTHESIS params RIGHT_PARENTHESIS {}
      ;
 
-primitive : SHORT   {char * n = (char *) malloc(10);
+primitive : SHORT   {char s = (char) $1;
+                    char * n = (char *) malloc(strlen(&s));
                     sprintf(n, "%i", $1);
                     $$ = n;}
-          | INTEGER {char * n = (char *) malloc(10);
+          | INTEGER {char i = (char) $1;
+                    char * n = (char *) malloc(strlen(&i));
                     sprintf(n, "%i", $1);
                     $$ = n;}
-          | LONG    {char * n = (char *) malloc(10);
+          | LONG    {char l = (char) $1;
+                    char * n = (char *) malloc(strlen(&l));
                     sprintf(n, "%ld", $1);
                     $$ = n;}
-          | FLOAT   {char * n = (char *) malloc(10);
+          | FLOAT   {char f = (char) $1;
+                    char * n = (char *) malloc(strlen(&f));
                     sprintf(n, "%f", $1);
                     $$ = n;}
-          | DOUBLE  {char * n = (char *) malloc(10);
+          | DOUBLE  {char d = (char) $1;
+                    char * n = (char *) malloc(strlen(&d));
                     sprintf(n, "%f", $1);
                     $$ = n;}
           | STRING  {$$ = $1;}
