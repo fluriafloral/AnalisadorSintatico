@@ -121,7 +121,6 @@ logicExpr : exprs EQUALS exprs                             {printf("%s == %s\n",
 	        ;
 
 exprs : expr                                                  {}
-      | LEFT_PARENTHESIS exprs RIGHT_PARENTHESIS              {}
       | expr ADDITION exprs                                   {}
       | expr SUBTRACTION exprs                                {}
       | expr MULTIPLICATION exprs                             {}
@@ -131,7 +130,8 @@ exprs : expr                                                  {}
       | expr MINUS_MINUS                                      {}
       ;
 
-expr : ID                                           {$$ = $1;}
+expr : LEFT_PARENTHESIS exprs RIGHT_PARENTHESIS     {}
+     | ID                                           {$$ = $1;} 
      | primitive                                    {}
      | ID LEFT_BRACKET exprs RIGHT_BRACKET          {}
      | ID LEFT_PARENTHESIS params RIGHT_PARENTHESIS {}

@@ -3,8 +3,7 @@ fn calcularMedia(){
     var nota2:f32 = 7;
     var nota3:f32 = 3;
 
-    var soma:i32 = nota1 + nota2 + nota3;
-    var media:f32 = soma / 3;
+    var media:f32 = (nota1 + nota2 + nota3)/3;
 
     return media;
 }
