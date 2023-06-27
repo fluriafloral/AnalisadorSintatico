@@ -35,7 +35,7 @@ extern char * yytext;
 
 %start prog
 
-%type <sValue> stm exprs expr logicExprs logicExpr index prog primitive
+%type <sValue> stm exprs expr logicExprs logicExpr index prog primitive 
 %type <sValue> assign_params assign_param params subprograms subprogram stms
 
 %%
@@ -58,7 +58,6 @@ stm : assign END       {printf("assign\n");}
     | func_stm         {printf("func\n");}
     | for_stm          {printf("for\n");}
     | while_stm        {printf("while\n");}
-    | exprs END        {printf("exprs\n");}
     | RETURN exprs END {}
     ;
 
@@ -88,7 +87,7 @@ func_stm : FUNC ID LEFT_PARENTHESIS assign_params RIGHT_PARENTHESIS LEFT_CURLYBR
 for_stm : FOR LEFT_PARENTHESIS assign END logicExprs END exprs RIGHT_PARENTHESIS LEFT_CURLYBRACKET stms RIGHT_CURLYBRACKET {}
         ;
 
-while_stm : WHILE LEFT_PARENTHESIS logicExprs RIGHT_PARENTHESIS LEFT_CURLYBRACKET stms RIGHT_CURLYBRACKET {}
+while_stm : WHILE logicExprs LEFT_CURLYBRACKET stms RIGHT_CURLYBRACKET {}
           ;     
 
 assign_params:                                                       {}
@@ -96,8 +95,8 @@ assign_params:                                                       {}
              | assign_param COMMA assign_params                      {}
              ;
 
-assign_param : ID COLON TYPE                            {}
-             | ID COLON LEFT_BRACKET TYPE RIGHT_BRACKET {}
+assign_param : ID COLON TYPE                                  {}
+             | ID COLON LEFT_BRACKET TYPE RIGHT_BRACKET       {}
              ;
 
 params:                                                       {}
@@ -105,19 +104,19 @@ params:                                                       {}
       | exprs COMMA params                                    {}
       ;
 
-logicExprs : logicExpr AND logicExprs                      {printf("and\n");}
-           | logicExpr OR logicExprs                       {printf("or\n");}
-           | LEFT_PARENTHESIS logicExprs RIGHT_PARENTHESIS {}       
-           | NOT logicExprs                                {}                     
-           | logicExpr                                     {}
+logicExprs : logicExpr AND logicExprs                         {printf("and\n");}
+           | logicExpr OR logicExprs                          {printf("or\n");}
+           | NOT logicExprs                                   {}                     
+           | logicExpr                                        {}
 	         ;
 	      
-logicExpr : exprs EQUALS exprs                             {printf("%s == %s\n", $1, $3);}
-          | exprs NOT_EQUALS exprs                         {printf("%s != %s\n", $1, $3);}
-          | exprs GREATER_THAN exprs                       {printf("%s > %s\n", $1, $3);}
-          | exprs GREATER_THAN_OR_EQUALS_TO exprs          {printf("%s >= %s\n", $1, $3);}
-          | exprs LESS_THAN exprs                          {printf("%s < %s\n", $1, $3);}
-          | exprs LESS_THAN_OR_EQUALS_TO exprs             {printf("%s <= %s\n", $1, $3);}
+logicExpr : expr EQUALS expr                                  {printf("%s == %s\n", $1, $3);}
+          | expr NOT_EQUALS expr                              {printf("%s != %s\n", $1, $3);}
+          | expr GREATER_THAN expr                            {printf("%s > %s\n", $1, $3);}
+          | expr GREATER_THAN_OR_EQUALS_TO expr               {printf("%s >= %s\n", $1, $3);}
+          | expr LESS_THAN expr                               {printf("%s < %s\n", $1, $3);}
+          | expr LESS_THAN_OR_EQUALS_TO expr                  {printf("%s <= %s\n", $1, $3);}
+          | LEFT_PARENTHESIS logicExprs RIGHT_PARENTHESIS    {}       
 	        ;
 
 exprs : expr                                                  {}

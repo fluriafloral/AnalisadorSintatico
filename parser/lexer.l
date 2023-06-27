@@ -1,6 +1,6 @@
 %{
   #include <stdio.h>
-  #include "p.tab.h"
+  #include "y.tab.h"
   
   extern int yyerror (char *msg);  
 %}
