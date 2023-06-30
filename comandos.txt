@@ -4,12 +4,12 @@ ou
 flex lexer.l
 
 //gerar arquivo c do analisador sintático (-d: y.tab.h; -v: y.output;)
-yacc p.y -d -v
+yacc p.y -o y.tab.c -d -v
 ou
-bison p.y -d -v
+bison p.y -o y.tab.c -d -v
 
 //compilar léxico e sintático
-gcc lex.yy.c p.tab.c -o parser
+gcc lex.yy.c y.tab.c -o parser
 
 //executar os testes
 parser < ../testes/teste1.txt

@@ -1,0 +1,5 @@
+var var1:i32 = 5;
+var var2:i32 = 7;
+var var3:i32 = 10;
+
+var operacaoGrande:f32 = (var1 - var2 + 3 * var3) - var1 + var2 * (12 + var2 / var3);

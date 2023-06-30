@@ -10,13 +10,13 @@ extern char * yytext;
 %}
 
 %union {
-  short  hValue;  /* short value */
+     short  hValue;      /* short value */
 	int    iValue; 	/* integer value */
-  long   lValue; 	/* long value */
+     long   lValue; 	/* long value */
 	float  fValue; 	/* float value */
-  double dValue; 	/* double value */
+     double dValue; 	/* double value */
 	char   cValue; 	/* char value */
-	char * sValue;  /* string value */
+	char * sValue;      /* string value */
 	};
 
 
@@ -51,11 +51,11 @@ subprogram : stms {}
            ;
 
 stms : stm       {}    
-     | stm stms  {}
+     | stm '' stms  {}
      ;
 
 stm : init                                                                  {printf("init\n");}
-    | assigns                                                               {printf("assign\n");}
+    | assign                                                               {printf("assign\n");}
     | if_stm                                                                {printf("if\n");}
     | func_stm                                                              {printf("func\n");}
     | for_stm                                                               {printf("for\n");}
@@ -64,23 +64,17 @@ stm : init                                                                  {pri
 
 type : COLON TYPE                                                           {$$ = $2}
 
-init : VAR ID type ASSIGN exprs                                             {printf("%s(%s) = %s\n", $2, $3, $5);}
+init : VAR ID type ASSIGN exprs END                                         {printf("%s(%s) = %s\n", $2, $3, $5);}
      | VAR ID type ASSIGN LEFT_BRACKET index RIGHT_BRACKET                  {printf("%s(%s) = []\n", $2, $3);}
      ;
 
-
-
-assigns : assign END {}
-        | assign END assigns {}
-        ;
-
-assign : ID ADDITION_AND_ASSIGN exprs                                       {printf("%s += %s\n", $1, $3);}
-       | ID LEFT_BRACKET exprs RIGHT_BRACKET ASSIGN expr                    {printf("%s[] = array\n", $1);}
-       | ID ASSIGN exprs                                                    {printf("%s = %s\n", $1, $3);}
-       | ID SUBTRACTION_AND_ASSIGN exprs                                    {printf("%s -= %s\n", $1, $3);}
-       | ID MULTIPLICATION_AND_ASSIGN exprs                                 {printf("%s *= %s\n", $1, $3);}
-       | ID DIVISION_AND_ASSIGN exprs                                       {printf("%s /= %s\n", $1, $3);}
-       | ID REMAINDER_AND_ASSIGN exprs                                      {printf("%s mod= %s\n", $1, $3);}
+assign : ID ADDITION_AND_ASSIGN exprs END                                      {printf("%s += %s\n", $1, $3);}
+       | ID LEFT_BRACKET exprs RIGHT_BRACKET ASSIGN expr END                   {printf("%s[] = array\n", $1);}
+       | ID ASSIGN exprs END                                                   {printf("%s = %s\n", $1, $3);}
+       | ID SUBTRACTION_AND_ASSIGN exprs END                                   {printf("%s -= %s\n", $1, $3);}
+       | ID MULTIPLICATION_AND_ASSIGN exprs END                                {printf("%s *= %s\n", $1, $3);}
+       | ID DIVISION_AND_ASSIGN exprs END                                      {printf("%s /= %s\n", $1, $3);}
+       | ID REMAINDER_AND_ASSIGN exprs END                                     {printf("%s mod= %s\n", $1, $3);}
        ;
     
 index :                                                                     {}
@@ -144,9 +138,18 @@ exprs : expr                                                                {}
 expr : LEFT_PARENTHESIS exprs RIGHT_PARENTHESIS                             {}
      | ID                                                                   {$$ = $1;} 
      | primitive                                                            {}
-     | ID LEFT_BRACKET exprs RIGHT_BRACKET                                  {}
-     | ID LEFT_PARENTHESIS params RIGHT_PARENTHESIS                         {}
+     | ID dims                                                              {}
+     | invoke                                                               {}
      ;
+
+dims : dim                                                                  {}
+     | dim dims                                                             {}
+     ;
+
+dim : LEFT_BRACKET exprs RIGHT_BRACKET                                      {}
+
+invoke : ID LEFT_PARENTHESIS params RIGHT_PARENTHESIS                       {}
+       ;
 
 primitive : SHORT   {char s = (char) $1;
                     char * n = (char *) malloc(strlen(&s));
