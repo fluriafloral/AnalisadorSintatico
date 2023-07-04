@@ -3,10 +3,10 @@ lex lexer.l
 ou
 flex lexer.l
 
-//gerar arquivo c do analisador sintático (-d: y.tab.h; -v: y.output;)
-yacc p.y -o y.tab.c -d -v
+//gerar arquivo c do analisador sintático (-d: y.tab.h; -v: y.output; -g: y.dot [GraphViz])
+yacc p.y -d -v -g
 ou
-bison p.y -o y.tab.c -d -v
+bison p.y -d -v -g
 
 //compilar léxico e sintático
 gcc lex.yy.c y.tab.c -o parser
