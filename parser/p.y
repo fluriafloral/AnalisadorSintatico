@@ -51,21 +51,23 @@ subprogram : stms {}
            ;
 
 stms : stm       {}    
-     | stm '' stms  {}
+     | stm stms  {}
      ;
 
 stm : init                                                                  {printf("init\n");}
-    | assign                                                               {printf("assign\n");}
+    | assign                                                                {printf("assign\n");}
+    | return                                                                {printf("return\n");}
     | if_stm                                                                {printf("if\n");}
     | func_stm                                                              {printf("func\n");}
     | for_stm                                                               {printf("for\n");}
     | while_stm                                                             {printf("while\n");}
     ;
 
-type : COLON TYPE                                                           {$$ = $2}
-
-init : VAR ID type ASSIGN exprs END                                         {printf("%s(%s) = %s\n", $2, $3, $5);}
-     | VAR ID type ASSIGN LEFT_BRACKET index RIGHT_BRACKET                  {printf("%s(%s) = []\n", $2, $3);}
+type : COLON TYPE                                                           {$$ = $2;}
+     ;
+     
+init : VAR ID type ASSIGN exprs END                                            {printf("%s(%s) = %s\n", $2, $3, $5);}
+     | VAR ID type ASSIGN LEFT_BRACKET index RIGHT_BRACKET END                 {printf("%s(%s) = []\n", $2, $3);}
      ;
 
 assign : ID ADDITION_AND_ASSIGN exprs END                                      {printf("%s += %s\n", $1, $3);}
@@ -75,6 +77,9 @@ assign : ID ADDITION_AND_ASSIGN exprs END                                      {
        | ID MULTIPLICATION_AND_ASSIGN exprs END                                {printf("%s *= %s\n", $1, $3);}
        | ID DIVISION_AND_ASSIGN exprs END                                      {printf("%s /= %s\n", $1, $3);}
        | ID REMAINDER_AND_ASSIGN exprs END                                     {printf("%s mod= %s\n", $1, $3);}
+       ;
+
+return : RETURN exprs END                                                   {printf("return %s\n", $2);}
        ;
     
 index :                                                                     {}
@@ -87,10 +92,9 @@ if_stm : IF logicExprs LEFT_CURLYBRACKET stms RIGHT_CURLYBRACKET            {}
        ;
 
 func_stm : FUNC ID LEFT_PARENTHESIS assign_params RIGHT_PARENTHESIS LEFT_CURLYBRACKET stms RIGHT_CURLYBRACKET {}
-         | FUNC ID LEFT_PARENTHESIS assign_params RIGHT_PARENTHESIS LEFT_CURLYBRACKET stms RETURN exprs END RIGHT_CURLYBRACKET {}
          ;
 
-for_stm : FOR LEFT_PARENTHESIS assign END logicExprs END exprs RIGHT_PARENTHESIS LEFT_CURLYBRACKET stms RIGHT_CURLYBRACKET {}
+for_stm : FOR LEFT_PARENTHESIS init logicExprs END exprs RIGHT_PARENTHESIS LEFT_CURLYBRACKET stms RIGHT_CURLYBRACKET {}
         ;
 
 while_stm : WHILE logicExprs LEFT_CURLYBRACKET stms RIGHT_CURLYBRACKET      {}
