@@ -12,4 +12,9 @@ bison p.y -d -v -g
 gcc lex.yy.c y.tab.c -o parser
 
 //executar os testes
-parser < ../testes/teste1.txt
+./parser < ../testes/teste1.txt
+./parser < ../testes/teste2.txt
+./parser < ../testes/teste3.txt
+./parser < ../testes/teste4.txt
+./parser < ../testes/funcao.txt
+./parser < ../testes/mergeSort.txt

@@ -77,6 +77,8 @@ assign : ID ADDITION_AND_ASSIGN exprs END                                      {
        | ID MULTIPLICATION_AND_ASSIGN exprs END                                {printf("%s *= %s\n", $1, $3);}
        | ID DIVISION_AND_ASSIGN exprs END                                      {printf("%s /= %s\n", $1, $3);}
        | ID REMAINDER_AND_ASSIGN exprs END                                     {printf("%s mod= %s\n", $1, $3);}
+       | ID PLUS_PLUS END                                                     {}
+       | ID MINUS_MINUS END                                                   {}
        ;
 
 return : RETURN exprs END                                                   {printf("return %s\n", $2);}
@@ -92,6 +94,7 @@ if_stm : IF logicExprs LEFT_CURLYBRACKET stms RIGHT_CURLYBRACKET            {}
        ;
 
 func_stm : FUNC ID LEFT_PARENTHESIS assign_params RIGHT_PARENTHESIS LEFT_CURLYBRACKET stms RIGHT_CURLYBRACKET {}
+         | ID LEFT_PARENTHESIS params RIGHT_PARENTHESIS END {}
          ;
 
 for_stm : FOR LEFT_PARENTHESIS init logicExprs END exprs RIGHT_PARENTHESIS LEFT_CURLYBRACKET stms RIGHT_CURLYBRACKET {}
